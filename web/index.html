@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f6f8" />
+    <title>齿轮设计助手</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="齿轮设计助手首页"><span class="brand-mark">G</span><span>齿轮设计助手<small>MECHANICAL DESIGN TOOLKIT</small></span></a>
+      <div class="top-actions"><span class="local-badge"><i></i>本地设计</span><button id="helpButton" class="icon-button" aria-label="使用说明">?</button></div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <div class="side-label">设计流程</div>
+        <div class="step active"><b>01</b><span>齿轮参数</span><i>●</i></div>
+        <div class="step"><b>02</b><span>计算与预览</span></div>
+        <div class="step"><b>03</b><span>导出设计文件</span></div>
+        <div class="side-card"><div class="card-icon">✳</div><strong>参数化设计</strong><p>修改参数后，几何尺寸和齿轮预览会即时更新。</p></div>
+        <div class="side-foot">课程设计工具 · v0.1</div>
+      </aside>
+
+      <section class="workspace">
+        <div class="page-heading"><div><div class="eyebrow">MECHANICAL DESIGN / GEAR</div><h1>新建设计</h1><p>选择齿轮类型，输入参数并生成可查看的三维模型。</p></div><span class="draft-tag">未保存设计</span></div>
+
+        <div class="content-grid">
+          <section class="panel parameters">
+            <div class="panel-heading"><div><h2>设计参数</h2><p>标有 <em>*</em> 的参数为必填项</p></div><span class="step-number">01</span></div>
+            <div class="field"><label for="gearType">齿轮类型 <em>*</em></label><select id="gearType"><option value="spur">外啮合直齿圆柱齿轮</option><option value="helical">外啮合斜齿圆柱齿轮</option><option value="rack">直齿齿条与齿轮</option><option value="bevel">直齿锥齿轮（单轮近似）</option></select></div>
+            <div class="field"><label for="designMode">设计对象</label><select id="designMode"><option value="single">单个齿轮</option><option value="pair">一对外啮合齿轮</option></select></div>
+            <div class="field-row"><div class="field"><label for="module">模数 m <em>*</em></label><div class="input-unit"><input id="module" type="number" value="2.5" min="0.5" max="20" step="0.25"><span>mm</span></div><small>常用范围 0.5–20 mm</small></div><div class="field"><label for="teeth">齿数 z <em>*</em></label><div class="input-unit"><input id="teeth" type="number" value="24" min="6" max="200" step="1"><span>齿</span></div><small>标准全齿高制</small></div></div>
+            <div id="pairFields" class="field-row hidden"><div class="field"><label for="teeth2">齿轮 2 齿数 z₂ <em>*</em></label><div class="input-unit"><input id="teeth2" type="number" value="36" min="6" max="200" step="1"><span>齿</span></div></div><div class="field"><label for="bore2">齿轮 2 轴孔</label><div class="input-unit"><input id="bore2" type="number" value="10" min="0" max="100" step="1"><span>mm</span></div></div></div>
+            <div class="field-row"><div class="field"><label for="pressure">压力角 αₙ</label><div class="input-unit"><input id="pressure" type="number" value="20" min="14.5" max="30" step="0.5"><span>°</span></div></div><div class="field"><label for="width">齿宽 b <em>*</em></label><div class="input-unit"><input id="width" type="number" value="25" min="2" max="200" step="1"><span>mm</span></div></div></div>
+            <div class="field-row"><div class="field"><label for="bore">轴孔直径 d₀</label><div class="input-unit"><input id="bore" type="number" value="10" min="0" max="100" step="1"><span>mm</span></div></div><div class="field"><label for="shift">变位系数 x</label><div class="input-unit"><input id="shift" type="number" value="0" min="-0.5" max="1" step="0.05"><span>—</span></div></div></div>
+            <div id="helixFields" class="field-row hidden"><div class="field"><label for="helix">螺旋角 β</label><div class="input-unit"><input id="helix" type="number" value="15" min="5" max="45" step="1"><span>°</span></div></div><div class="field"><label for="hand">齿轮 1 旋向</label><select id="hand"><option value="right">右旋（齿轮 2 自动左旋）</option><option value="left">左旋（齿轮 2 自动右旋）</option></select></div></div>
+            <div class="field"><label for="material">材料</label><select id="material"><option>45钢（调质）</option><option>40Cr（调质）</option><option>20CrMnTi（渗碳淬火）</option><option>铸铁 HT250</option><option>工程塑料 POM</option><option>自定义 / 仅记录</option></select></div>
+            <div class="notice"><span>ⓘ</span><p id="designNotice">齿轮副采用相同法向参数、相反旋向和配对变位（x₂ = −x₁），并按理论中心距定位。材料仅作记录；未包含制造公差、侧隙及完整干涉/强度校核。</p></div>
+          </section>
+
+          <section class="panel preview-panel">
+            <div class="panel-heading preview-heading"><div><h2>模型预览</h2><p id="previewSubtitle">标准渐开线 · 单位 mm</p></div><div class="view-switch"><button class="selected" data-view="iso">三维</button><button data-view="top">俯视</button></div></div>
+            <div id="preview" class="preview"><div id="modelWrap" class="model-wrap"></div><div class="view-caption">左键拖动旋转 · 滚轮缩放 · mm</div></div>
+            <div class="animation-bar"><button id="animationToggle" class="button secondary" type="button">▶ 播放运动</button><label for="animationSpeed">速度</label><input id="animationSpeed" type="range" min="0.25" max="2.5" step="0.25" value="1"><span id="animationSpeedValue">1×</span><span id="animationState">暂停</span></div>
+            <div class="dimensions"><div><span id="pitchLabel">分度圆直径</span><strong id="pitchValue">60.00 <small>mm</small></strong></div><div><span>齿顶圆直径</span><strong id="outerValue">65.00 <small>mm</small></strong></div><div><span>齿根圆直径</span><strong id="rootValue">53.75 <small>mm</small></strong></div><div><span id="centerLabel">基圆直径</span><strong id="centerValue">56.38 <small>mm</small></strong></div></div>
+            <div id="messages" class="messages" aria-live="polite"></div>
+            <div class="result-strip"><div><span class="status-dot"></span><span id="modelStatus">模型已更新</span></div><button id="resetButton" class="text-button">恢复默认参数 ↺</button></div>
+          </section>
+        </div>
+
+        <section class="export-panel"><div class="export-copy"><div class="export-icon">⇩</div><div><h2>导出设计文件</h2><p>生成二维齿廓 SVG 或三维实体 STEP，保存前可选择文件夹。</p></div></div><div class="export-actions"><button id="svgButton" class="button secondary">导出 SVG 轮廓</button><button id="stepButton" class="button primary">生成 STEP 模型 <span>→</span></button></div></section>
+        <footer>实时预览为参数化网格，STEP 为 CAD 实体。设计输出用于课程学习；生产前须完成齿形、强度、精度及装配校核。</footer>
+      </section>
+    </main>
+    <dialog id="helpDialog"><button id="closeHelp" class="dialog-close" aria-label="关闭">×</button><h2>使用说明</h2><p>输入参数后，三维预览会实时更新。按住鼠标左键拖动可旋转，模型上滚动滚轮可缩放；点击“三维 / 俯视”切换视角。点“播放运动”可查看转动动画，齿轮副按齿数比联动，齿条副显示齿轮转动与齿条平移；速度可用滑条调整。</p><p>页面通过滚轮或拖动滚动条滚动。中键拖动已禁用，不会触发整页自动滚动。现支持直齿、斜齿、直齿齿条副和单个直齿锥齿轮；直齿/斜齿圆柱齿轮副及齿条副可导出装配 STEP。</p><p>锥齿轮当前为课程用锥形近似模型，未实现成对锥齿轮的精确啮合齿面。STEP 可在 FreeCAD、SolidWorks 等 CAD 软件中导入。所有模型均未包含完整制造公差、齿根刀具包络、强度及干涉校核，不可直接作为生产放行依据。</p></dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
