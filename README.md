@@ -28,7 +28,9 @@
 
 ## 使用便携版
 
-1. 解压 `dist/GearDesign-Portable.zip` 到一个有写入权限的文件夹。
+GitHub 仓库目前提供源码，尚未附带可直接下载的 EXE 或便携 ZIP。请按下文“从源码运行和重新打包”生成便携包；以下步骤适用于生成后的 `dist/GearDesign-Portable.zip`。
+
+1. 将 `dist/GearDesign-Portable.zip` 解压到一个有写入权限的文件夹。
 2. 双击 `GearDesign/GearDesign.exe`。
 3. 在“齿轮类型”选择直齿、斜齿、齿条副或单轮锥齿轮。圆柱齿轮可选单轮或齿轮副；齿条自动切换为齿条副，锥齿轮当前仅支持单轮。
 4. 左键拖动 3D 视图旋转模型，滚轮缩放；中键拖动不会移动页面。页面滚动请使用滚轮或拖动窗口滚动条；选择“俯视”切换正视观察。
@@ -41,16 +43,17 @@
 
 ## 从源码运行和重新打包
 
-项目专用 Python 环境已配置时：
+在 Windows 上安装 Python 3.12 后，在项目根目录运行：
 
 ```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
 .\.venv\Scripts\python.exe .\desktop_app.py
 ```
 
-准备构建环境并生成免安装目录及 ZIP：
+生成免安装目录及 ZIP：
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
 powershell -NoProfile -ExecutionPolicy Bypass -File .\packaging\build_portable.ps1
 ```
 
